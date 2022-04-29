@@ -10,6 +10,14 @@ export class Item {
     }
 }
 
+export class ItemQualityNotNull extends Item {
+  constructor(name, sellIn, quality) {
+    super(name, sellIn, quality);
+    this.name = name;
+    this.sellIn = sellIn;
+    this.quality = quality < 0 ? 0 : quality;
+  }
+}
 export class GildedRose {
     items: Array<Item>;
 
