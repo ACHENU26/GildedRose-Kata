@@ -32,5 +32,11 @@ describe("Gilded Rose", function () {
       expect(items[0].quality).to.equal(8);
       expect(items[1].quality).to.equal(4);
     });
+    it("Devrait dégrader toutes les valeurs 'SellIn' lors de la mise à jour", () => {
+      const gildedRose = new GildedRose(listItems);
+      const items = gildedRose.updateQuality(); // 2eme jours de passé
+      expect(items[0].sellIn).to.equal(2);
+      expect(items[1].sellIn).to.equal(1);
+    });
   });
 });
