@@ -47,5 +47,10 @@ describe("Gilded Rose", function () {
       const items = gildedRose.updateQuality();
       expect(items[0].quality).to.equal(2);
     });
+    it("La qualité d'un Aged Brie n'est jamais de plus de 50", () => {
+      const gildedRose = new GildedRose([new DefaultItem("Aged Brie", 0, 70)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).not.above(50);
+    });
   });
 });
