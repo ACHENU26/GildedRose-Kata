@@ -77,5 +77,10 @@ describe("Gilded Rose", function () {
       const items = gildedRose.updateQuality();
       expect(items[0].quality).to.equal(0);
     });
+    it("Si SellIn est inférieur à 5, Quality devrait augmenter de 11 à 14 lors de la mise à jour", () => {
+      const gildedRose = new GildedRose([new BackstagePasses(3, 11)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).to.equal(14);
+    });
   });
 });
