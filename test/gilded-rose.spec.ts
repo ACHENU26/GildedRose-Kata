@@ -13,4 +13,11 @@ describe("Gilded Rose", function () {
     const item = new DefaultItem("+5 Dexterity Vest", 0, -1);
     expect(item.quality).not.below(0);
   });
+  it("La qualité d'un produit n'est jamais de plus de 50", () => {
+    const gildedRose = new GildedRose([
+      new DefaultItem("+5 Dexterity Vest", 0, 55),
+    ]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].quality).not.above(50);
+  });
 });
