@@ -64,5 +64,10 @@ describe("Gilded Rose", function () {
       const items = gildedRose.updateQuality();
       expect(items[0].sellIn).equal(0);
     });
+    it("Sulfuras, étant un objet légendaire, ne perd jamais en qualité (doit retourner 80)", () => {
+      const gildedRose = new GildedRose([new Sulfuras()]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).equal(80);
+    });
   });
 });
