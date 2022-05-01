@@ -20,4 +20,17 @@ describe("Gilded Rose", function () {
     const items = gildedRose.updateQuality();
     expect(items[0].quality).not.above(50);
   });
+  describe("Multiple items", () => {
+    const listItems = [
+      new DefaultItem("rosemary", 4, 9),
+      new DefaultItem("thyme", 3, 5),
+    ];
+
+    it("Devrait dégrader toutes les valeurs de 'Quality' lors de la mise à jour", () => {
+      const gildedRose = new GildedRose(listItems);
+      const items = gildedRose.updateQuality(); // 1er jours de passé
+      expect(items[0].quality).to.equal(8);
+      expect(items[1].quality).to.equal(4);
+    });
+  });
 });
