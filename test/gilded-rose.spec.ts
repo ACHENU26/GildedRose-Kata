@@ -4,6 +4,7 @@ import {
   GildedRose,
   AgedBrie,
   Sulfuras,
+  BackstagePasses,
 } from "../app/gilded-rose";
 
 describe("Gilded Rose", function () {
@@ -68,6 +69,13 @@ describe("Gilded Rose", function () {
       const gildedRose = new GildedRose([new Sulfuras()]);
       const items = gildedRose.updateQuality();
       expect(items[0].quality).equal(80);
+    });
+  });
+  describe("Backstage passes", () => {
+    it("Si SellIn est égal à 0, Quality doit être égale à 0", () => {
+      const gildedRose = new GildedRose([new BackstagePasses(0, 11)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).to.equal(0);
     });
   });
 });
