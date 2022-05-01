@@ -13,7 +13,13 @@ export class Item {
 export class DefaultItem extends Item {
   constructor(name: string, sellIn: number, quality: number) {
     super(name, sellIn, quality);
-    if (this.quality < 0) this.quality = 0;
+    if (this.quality < 0) {
+      this.quality = 0;
+    } else {
+      if (this.quality > 50) {
+        this.quality = 50;
+      }
+    }
   }
 }
 
