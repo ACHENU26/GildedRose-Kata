@@ -66,11 +66,23 @@ export class BackstagePasses extends DefaultItem {
     }
   }
 }
+
+export class Conjured extends DefaultItem {
+  constructor(sellIn: number, quality: number) {
+    super("Conjured", sellIn, quality);
+  }
+  updateQuality() {
+    this.quality = this.quality - 2 > 0 ? this.quality - 2 : 0;
+    this.sellIn += -1;
+  }
+}
 export class GildedRose {
-  items: Array<DefaultItem | AgedBrie | Sulfuras | BackstagePasses>;
+  items: Array<DefaultItem | AgedBrie | Sulfuras | BackstagePasses | Conjured>;
 
   constructor(
-    items = [] as Array<DefaultItem | AgedBrie | Sulfuras | BackstagePasses>
+    items = [] as Array<
+      DefaultItem | AgedBrie | Sulfuras | BackstagePasses | Conjured
+    >
   ) {
     this.items = items;
   }
