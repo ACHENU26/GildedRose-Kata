@@ -1,5 +1,10 @@
 import { expect } from "chai";
-import { DefaultItem, GildedRose, AgedBrie } from "../app/gilded-rose";
+import {
+  DefaultItem,
+  GildedRose,
+  AgedBrie,
+  Sulfuras,
+} from "../app/gilded-rose";
 
 describe("Gilded Rose", function () {
   describe("Item par défault", () => {
@@ -51,6 +56,13 @@ describe("Gilded Rose", function () {
       const gildedRose = new GildedRose([new AgedBrie(0, 70)]);
       const items = gildedRose.updateQuality();
       expect(items[0].quality).not.above(50);
+    });
+  });
+  describe("Sulfuras", () => {
+    it("Sulfuras, étant un objet légendaire, n'a pas de date de péremption", () => {
+      const gildedRose = new GildedRose([new Sulfuras()]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].sellIn).equal(0);
     });
   });
 });
