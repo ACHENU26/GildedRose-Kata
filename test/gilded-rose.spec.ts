@@ -110,5 +110,9 @@ describe("Gilded Rose", function () {
       const items = gildedRose.updateQuality();
       expect(items[0].quality).to.equal(1);
     });
+    it("La qualité d'un Conjured ne peut jamais être négative", () => {
+      const item = new Conjured(0, -1);
+      expect(item.quality).not.below(0);
+    });
   });
 });
