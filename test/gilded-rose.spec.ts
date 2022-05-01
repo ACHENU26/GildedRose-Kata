@@ -92,5 +92,10 @@ describe("Gilded Rose", function () {
       const items = gildedRose.updateQuality();
       expect(items[0].quality).to.equal(13);
     });
+    it("Si SellIn est égal à 10, Quality devrait augmenter de 23 à 25 lors de la mise à jour", () => {
+      const gildedRose = new GildedRose([new BackstagePasses(6, 23)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).to.equal(25);
+    });
   });
 });
