@@ -1,9 +1,11 @@
 import { expect } from "chai";
-import { Item, DefaultItem, GildedRose } from "../app/gilded-rose";
+import { DefaultItem, GildedRose } from "../app/gilded-rose";
 
 describe("Gilded Rose", function () {
   it("Une fois que la date de péremption est passée, la qualité se dégrade deux fois plus rapidement: 2 -> 0", () => {
-    const gildedRose = new GildedRose([new Item("+5 Dexterity Vest", 0, 2)]);
+    const gildedRose = new GildedRose([
+      new DefaultItem("+5 Dexterity Vest", 0, 2),
+    ]);
     const items = gildedRose.updateQuality();
     expect(items[0].quality).to.equal(0);
   });
