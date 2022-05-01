@@ -10,6 +10,13 @@ export class Item {
   }
 }
 
+export class DefaultItem extends Item {
+  constructor(name: string, sellIn: number, quality: number) {
+    super(name, sellIn, quality);
+    if (this.quality < 0) this.quality = 0;
+  }
+}
+
 export class GildedRose {
   items: Array<Item>;
 
