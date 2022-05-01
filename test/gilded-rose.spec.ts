@@ -41,5 +41,11 @@ describe("Gilded Rose", function () {
       });
     });
   });
-  describe("Aged Brie", () => {});
+  describe("Aged Brie", () => {
+    it("Aged Brie augmente sa qualité plus le temps passe : 1 -> 2", () => {
+      const gildedRose = new GildedRose([new DefaultItem("Aged Brie", 2, 1)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).to.equal(2);
+    });
+  });
 });
