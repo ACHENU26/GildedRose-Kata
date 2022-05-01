@@ -5,6 +5,7 @@ import {
   AgedBrie,
   Sulfuras,
   BackstagePasses,
+  Conjured,
 } from "../app/gilded-rose";
 
 describe("Gilded Rose", function () {
@@ -101,6 +102,13 @@ describe("Gilded Rose", function () {
       const gildedRose = new GildedRose([new BackstagePasses(14, 31)]);
       const items = gildedRose.updateQuality();
       expect(items[0].quality).to.equal(32);
+    });
+  });
+  describe("Conjured", () => {
+    it("Conjured voient leur qualité se dégrader de deux fois plus vite que les objets normaux: 3 -> 1", () => {
+      const gildedRose = new GildedRose([new Conjured(2, 3)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).to.equal(1);
     });
   });
 });
