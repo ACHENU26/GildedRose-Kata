@@ -1,30 +1,128 @@
 import { expect } from "chai";
-import { ItemQualityNotNull, GildedRose } from "../app/gilded-rose";
+import {
+  DefaultItem,
+  AgedBrie,
+  GildedRose,
+  Sulfuras,
+  BackstagePasses,
+  Conjured,
+} from "../app/gilded-rose";
 
 describe("Gilded Rose", () => {
-  it("Une fois que la date de péremption est passée, la qualité se dégrade deux fois plus rapidement.", () => {
-    const gildedRose = new GildedRose([
-      new ItemQualityNotNull("+5 Dexterity Vest", 0, 2),
-    ]);
-    const items = gildedRose.updateQuality();
-    expect(items[0].quality).to.equal(0);
+  describe("Item par défault", () => {
+    it("Une fois que la date de péremption est passée, la qualité se dégrade deux fois plus rapidement.", () => {
+      const gildedRose = new GildedRose([
+        new DefaultItem("+5 Dexterity Vest", 0, 2),
+      ]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).to.equal(0);
+    });
+    it("La qualité d'un produit ne peut jamais être négative.", () => {
+      const item = new DefaultItem("+5 Dexterity Vest", 0, -1);
+      expect(item.quality).not.below(0);
+    });
+    it("La qualité d'un produit n'est jamais de plus de 50.", () => {
+      const gildedRose = new GildedRose([
+        new DefaultItem("+5 Dexterity Vest", 0, 55),
+      ]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).not.above(50);
+    });
+    describe("Multiple items", () => {
+      const listItems = [
+        new DefaultItem("rosemary", 4, 9),
+        new DefaultItem("thyme", 3, 5),
+      ];
+
+      it("Devrait dégrader toutes les valeurs de 'Quality' lors de la mise à jour", () => {
+        const gildedRose = new GildedRose(listItems);
+        const items = gildedRose.updateQuality(); // 1er jours de passé
+        expect(items[0].quality).to.equal(8);
+        expect(items[1].quality).to.equal(4);
+      });
+
+      it("'Devrait dégrader toutes les valeurs 'SellIn' lors de la mise à jour'", () => {
+        const gildedRose = new GildedRose(listItems);
+        const items = gildedRose.updateQuality(); // 2eme jours de passé
+        expect(items[0].sellIn).to.equal(2);
+        expect(items[1].sellIn).to.equal(1);
+      });
+    });
   });
-  it("La qualité d'un produit ne peut jamais être négative.", () => {
-    const item = new ItemQualityNotNull("+5 Dexterity Vest", 0, -1);
-    expect(item.quality).not.below(0);
+  describe("Aged Brie", () => {
+    it("Aged Brie augmente sa qualité plus le temps passe : 1 -> 2", () => {
+      const gildedRose = new GildedRose([new AgedBrie(2, 1)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).to.equal(2);
+    });
+    it("La qualité d'un Aged Brie n'est jamais de plus de 50.", () => {
+      const gildedRose = new GildedRose([new AgedBrie(0, 70)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).not.above(50);
+    });
   });
-  it("'Aged Brie' augmente sa qualité (quality) plus le temps passe.", () => {
-    const gildedRose = new GildedRose([
-      new ItemQualityNotNull("Aged Brie", 2, 1),
-    ]);
-    const items = gildedRose.updateQuality();
-    expect(items[0].quality).to.equal(2);
+
+  describe("Sulfuras", () => {
+    it("Sulfuras, étant un objet légendaire, n'a pas de date de péremption", () => {
+      const gildedRose = new GildedRose([new Sulfuras()]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].sellIn).equal(0);
+    });
+    it("Sulfuras, étant un objet légendaire, ne perd jamais en qualité (doit retourner 80)", () => {
+      const gildedRose = new GildedRose([new Sulfuras()]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).equal(80);
+    });
   });
-  it("La qualité d'un produit n'est jamais de plus de 50.", () => {
-    const gildedRose = new GildedRose([
-      new ItemQualityNotNull("+5 Dexterity Vest", 0, 50),
-    ]);
-    const actualUpdatedItem = gildedRose.updateQuality()[0];
-    expect(actualUpdatedItem.quality).to.equal(50);
+  describe("Backstage passes", () => {
+    it("Si SellIn est égal à 0, Quality doit être égale à 0", () => {
+      const gildedRose = new GildedRose([new BackstagePasses(0, 11)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).to.equal(0);
+    });
+    it("Si SellIn est inférieur à 5, Quality devrait augmenter de 11 à 14 lors de la mise à jour", () => {
+      const gildedRose = new GildedRose([new BackstagePasses(3, 11)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).to.equal(14);
+    });
+
+    it("Si SellIn est égal à 5, Quality devrait augmenter de 15 à 18 lors de la mise à jour", () => {
+      const gildedRose = new GildedRose([new BackstagePasses(5, 15)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).to.equal(18);
+    });
+
+    it("Si SellIn est inférieur à 10 et supérieur à 5, Quality devrait augmenter de 11 à 13 lors de la mise à jour", () => {
+      const gildedRose = new GildedRose([new BackstagePasses(7, 11)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).to.equal(13);
+    });
+
+    it("Si SellIn est égal à 10, Quality devrait augmenter de 23 à 25 lors de la mise à jour", () => {
+      const gildedRose = new GildedRose([new BackstagePasses(6, 23)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).to.equal(25);
+    });
+    it("Si SellIn est supérieur à 10, Quality devrait augmenter de 31 à 32 lors de la mise à jour", () => {
+      const gildedRose = new GildedRose([new BackstagePasses(14, 31)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).to.equal(32);
+    });
+  });
+  describe("Conjured", () => {
+    it("Conjured voient leur qualité se dégrader de deux fois plus vite que les objets normaux: 3 -> 1", () => {
+      const gildedRose = new GildedRose([new Conjured(2, 3)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).to.equal(1);
+    });
+    it("La qualité d'un Conjured n'est jamais de plus de 50.", () => {
+      const gildedRose = new GildedRose([new Conjured(0, 90)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).not.above(50);
+    });
+    it("La qualité d'un Conjured ne peut jamais être négative.", () => {
+      const item = new Conjured(0, -1);
+      expect(item.quality).not.below(0);
+    });
   });
 });

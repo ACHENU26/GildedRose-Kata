@@ -1,77 +1,95 @@
 export class Item {
-    name: string;
-    sellIn: number;
-    quality: number;
+  name: string;
+  sellIn: number;
+  quality: number;
 
-    constructor(name, sellIn, quality) {
-        this.name = name;
-        this.sellIn = sellIn;
-        this.quality = quality;
-    }
-}
-
-export class ItemQualityNotNull extends Item {
   constructor(name, sellIn, quality) {
+    this.name = name;
+    this.sellIn = sellIn;
+    this.quality = quality;
+  }
+}
+export class DefaultItem extends Item {
+  constructor(name: string, sellIn: number, quality: number) {
     super(name, sellIn, quality);
     this.name = name;
     this.sellIn = sellIn;
-    this.quality = quality < 0 ? 0 : quality;
+    if (this.quality < 0) {
+      this.quality = 0;
+    } else {
+      if (this.quality > 50) {
+        this.quality = 50;
+      }
+    }
+  }
+  updateQuality() {
+    if (this.sellIn > 0) {
+      this.quality += -1;
+    } else {
+      this.quality += -2;
+    }
+    this.sellIn += -1;
+  }
+}
+export class AgedBrie extends DefaultItem {
+  constructor(sellIn: number, quality: number) {
+    super("Aged Brie", sellIn, quality);
+  }
+  updateQuality() {
+    if (this.quality < 50) this.quality += 1;
+    this.sellIn += -1;
+  }
+}
+export class Sulfuras extends DefaultItem {
+  constructor() {
+    super("Sulfuras", 0, 0);
+    this.quality = 80;
+  }
+  updateQuality() {}
+}
+export class BackstagePasses extends DefaultItem {
+  constructor(sellIn: number, quality: number) {
+    super("Backstage passes", sellIn, quality);
+  }
+  updateQuality() {
+    if (this.sellIn === 0) {
+      this.quality = 0;
+    } else {
+      if (this.sellIn > 0 && this.sellIn <= 5) {
+        this.quality += 3;
+      } else {
+        if (this.sellIn > 5 && this.sellIn <= 10) {
+          this.quality += 2;
+        } else {
+          this.quality += 1;
+        }
+      }
+    }
+  }
+}
+export class Conjured extends DefaultItem {
+  constructor(sellIn: number, quality: number) {
+    super("Conjured", sellIn, quality);
+  }
+  updateQuality() {
+    this.quality = this.quality - 2 > 0 ? this.quality - 2 : 0;
+    this.sellIn += -1;
   }
 }
 export class GildedRose {
-    items: Array<Item>;
+  items: Array<DefaultItem | AgedBrie | Sulfuras | BackstagePasses>;
 
-    constructor(items = [] as Array<Item>) {
-        this.items = items;
-    }
+  constructor(
+    items = [] as Array<DefaultItem | AgedBrie | Sulfuras | BackstagePasses>
+  ) {
+    this.items = items;
+  }
 
-    updateQuality() {
-        for (let i = 0; i < this.items.length; i++) {
-            if (this.items[i].name != 'Aged Brie' && this.items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-                if (this.items[i].quality > 0) {
-                    if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
-                        this.items[i].quality = this.items[i].quality - 1
-                    }
-                }
-            } else {
-                if (this.items[i].quality < 50) {
-                    this.items[i].quality = this.items[i].quality + 1
-                    if (this.items[i].name == 'Backstage passes to a TAFKAL80ETC concert') {
-                        if (this.items[i].sellIn < 11) {
-                            if (this.items[i].quality < 50) {
-                                this.items[i].quality = this.items[i].quality + 1
-                            }
-                        }
-                        if (this.items[i].sellIn < 6) {
-                            if (this.items[i].quality < 50) {
-                                this.items[i].quality = this.items[i].quality + 1
-                            }
-                        }
-                    }
-                }
-            }
-            if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
-                this.items[i].sellIn = this.items[i].sellIn - 1;
-            }
-            if (this.items[i].sellIn < 0) {
-                if (this.items[i].name != 'Aged Brie') {
-                    if (this.items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-                        if (this.items[i].quality > 0) {
-                            if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
-                                this.items[i].quality = this.items[i].quality - 1
-                            }
-                        }
-                    } else {
-                        this.items[i].quality = this.items[i].quality - this.items[i].quality
-                    }
-                } else {
-                    if (this.items[i].quality < 50) {
-                        this.items[i].quality = this.items[i].quality + 1
-                    }
-                }
-            }
-        }
+  updateQuality() {
+    this.items.map((item) => {
+      item.updateQuality();
+    });
 
-        return this.items;
-    }
+    return this.items;
+  }
 }
